@@ -1,5 +1,6 @@
 package com.unitmock.food2forkkmm.interactors.recipe_list
 
+import com.unitmock.food2forkkmm.datasource.cache.RecipeCache
 import com.unitmock.food2forkkmm.datasource.network.RecipeService
 import com.unitmock.food2forkkmm.domain.model.Recipe
 import com.unitmock.food2forkkmm.domain.util.DataState
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.flow
 
 class SearchRecipes(
     private val recipeService: RecipeService,
+    private val recipeCache: RecipeCache,
 ) {
     fun execute(
         page: Int,
@@ -17,7 +19,15 @@ class SearchRecipes(
 
         try {
             val recipes = recipeService.search(page, query)
-            emit(DataState.data(data = recipes))
+            recipeCache.insert(recipes)
+
+            val cacheResult = if (query.isBlank()) {
+                recipeCache.getAll(page)
+            } else {
+                recipeCache.search(query, page)
+            }
+
+            emit(DataState.data(data = cacheResult))
         } catch (e: Exception) {
             emit(DataState.error<List<Recipe>>(message = e.message ?: "Unknown Error"))
         }
