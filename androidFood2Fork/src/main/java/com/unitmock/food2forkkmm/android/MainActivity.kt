@@ -5,6 +5,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import com.unitmock.food2forkkmm.android.presentation.navigation.Navigation
 import com.unitmock.food2forkkmm.datasource.network.KtorClientFactory
+import com.unitmock.food2forkkmm.datasource.network.RecipeServiceImpl
+import com.unitmock.food2forkkmm.datasource.network.model.RecipeDto
+import com.unitmock.food2forkkmm.datasource.network.toRecipe
+import com.unitmock.food2forkkmm.domain.util.DatetimeUtil
 import dagger.hilt.android.AndroidEntryPoint
 import io.ktor.client.request.*
 import kotlinx.coroutines.CoroutineScope
@@ -14,20 +18,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val ktorClient=  KtorClientFactory().build()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val recipeid = 1551
-            val recipe = ktorClient.get<String>(){
-                url("$BASE_URL/get?id=$recipeid")
-                header("Authorization", TOKEN)
-            }
-            println("KtorTest: $recipe")
-        }
-
         setContent { Navigation() }
     }
 
