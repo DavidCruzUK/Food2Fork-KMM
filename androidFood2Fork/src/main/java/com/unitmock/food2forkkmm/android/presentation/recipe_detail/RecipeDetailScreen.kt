@@ -1,4 +1,4 @@
-package com.unitmock.food2forkkmm.android.presentation.recipe_list
+package com.unitmock.food2forkkmm.android.presentation.recipe_detail
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

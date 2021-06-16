@@ -7,8 +7,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import com.unitmock.food2forkkmm.android.presentation.recipe_detail.RecipeDetailViewModel
-import com.unitmock.food2forkkmm.android.presentation.recipe_detail.RecipeListScreen
-import com.unitmock.food2forkkmm.android.presentation.recipe_list.RecipeDetailScreen
+import com.unitmock.food2forkkmm.android.presentation.recipe_list.RecipeListScreen
+import com.unitmock.food2forkkmm.android.presentation.recipe_detail.RecipeDetailScreen
 import com.unitmock.food2forkkmm.android.presentation.recipe_list.RecipeListViewModel
 
 @ExperimentalStdlibApi

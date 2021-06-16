@@ -1,4 +1,4 @@
-package com.unitmock.food2forkkmm.android.presentation.recipe_detail
+package com.unitmock.food2forkkmm.android.presentation.recipe_list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
