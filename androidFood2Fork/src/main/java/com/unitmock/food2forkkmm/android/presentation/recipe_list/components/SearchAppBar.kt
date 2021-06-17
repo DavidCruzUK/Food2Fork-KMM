@@ -3,6 +3,9 @@ package com.unitmock.food2forkkmm.android.presentation.recipe_list.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -16,11 +19,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.unitmock.food2forkkmm.presentation.recipe_list.FoodCategory
+import com.unitmock.food2forkkmm.presentation.recipe_list.FoodCategoryUtil
 
 @ExperimentalComposeUiApi
 @Composable
 fun SearchAppBar(
     query: String,
+    categories: List<FoodCategory>,
+    selectedCategory: FoodCategory? = null,
+    onSelectedCategoryChange: (FoodCategory) -> Unit,
     onQueryChange: (String) -> Unit,
     onExecuteSearch: () -> Unit,
 ) {
@@ -53,7 +61,18 @@ fun SearchAppBar(
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
                 )
             }
+            LazyRow(modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 8.dp)) {
+                items(categories) { it ->
+                    FoodCategoryChip(
+                        category = it,
+                        isSelected = selectedCategory == it,
+                        onSelectedCategoryChanged = {category ->
+                            FoodCategoryUtil().getFoodCategory(category)?.let { newCategory ->
+                                onSelectedCategoryChange(newCategory)
+                            }
+                        })
+                }
+            }
         }
-
     }
 }
