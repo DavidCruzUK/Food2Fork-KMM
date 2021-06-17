@@ -9,6 +9,8 @@ import com.unitmock.food2forkkmm.datasource.network.RecipeService
 import com.unitmock.food2forkkmm.domain.model.Recipe
 import com.unitmock.food2forkkmm.domain.util.DatetimeUtil
 import com.unitmock.food2forkkmm.interactors.recipe_detail.GetRecipe
+import com.unitmock.food2forkkmm.presentation.recipe_detail.RecipeDetailEvent
+import com.unitmock.food2forkkmm.presentation.recipe_detail.RecipeDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,25 +25,36 @@ constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getRecipe: GetRecipe,
 ) : ViewModel() {
-    val recipe: MutableState<Recipe?> = mutableStateOf(null)
+    val state: MutableState<RecipeDetailState> = mutableStateOf(RecipeDetailState())
 
     init {
         savedStateHandle.get<Int>("recipeId")?.let { recipeId ->
             viewModelScope.launch {
-                getRecipe(recipeId)
+                onTriggerEvent(RecipeDetailEvent.GetRecipe(recipeId = recipeId))
             }
         }
     }
 
+    fun onTriggerEvent(event: RecipeDetailEvent) {
+        when(event) {
+            is RecipeDetailEvent.GetRecipe -> getRecipe(event.recipeId)
+            else -> handleError("Invalid Event")
+        }
+    }
+
+    private fun handleError(message: String) {
+        // TODO("Not yet implemented")
+    }
+
     private fun getRecipe(recipeId: Int) {
         getRecipe.execute(recipeId).onEach {dataState ->
-            println("RecipeDetailVM: ${dataState.isLoading}")
+            state.value = state.value.copy(isLoading = dataState.isLoading)
             dataState.data?.let {recipe ->
-                println("RecipeDetailVM: $recipe")
-                this.recipe.value = recipe
+                this.state.value = state.value.copy(recipe = recipe)
             }
-            println("RecipeDetailVM: ${dataState.message}")
-            println("RecipeDetailVM: ====== NEW ========")
+            dataState.message?.let {
+                handleError(it)
+            }
         }.launchIn(viewModelScope)
     }
 }
