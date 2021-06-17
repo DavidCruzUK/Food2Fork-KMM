@@ -40,7 +40,7 @@ constructor(
             is RecipeListEvent.OnSelectCategory -> {
                 onSelectCategory(event.category)
             }
-            else -> handleError("")
+            else -> handleError("Invalid Event")
         }
     }
 
@@ -55,7 +55,9 @@ constructor(
     }
 
     private fun handleError(errorMessage: String) {
-        // TODO("Not yet implemented")
+        val queue = state.value.queue
+        queue.add(errorMessage)
+        state.value = state.value.copy(queue = queue)
     }
 
     private fun nextPage() {

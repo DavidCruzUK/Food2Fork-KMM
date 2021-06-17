@@ -42,8 +42,10 @@ constructor(
         }
     }
 
-    private fun handleError(message: String) {
-        // TODO("Not yet implemented")
+    private fun handleError(errorMessage: String) {
+        val queue = state.value.queue
+        queue.add(errorMessage)
+        state.value = state.value.copy(queue = queue)
     }
 
     private fun getRecipe(recipeId: Int) {
