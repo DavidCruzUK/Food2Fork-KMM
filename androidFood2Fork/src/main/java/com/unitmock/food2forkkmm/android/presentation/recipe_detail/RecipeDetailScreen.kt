@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import com.unitmock.food2forkkmm.android.presentation.components.RecipeImage
+import com.unitmock.food2forkkmm.android.presentation.recipe_list.components.RecipeCard
 import com.unitmock.food2forkkmm.android.presentation.theme.AppTheme
 import com.unitmock.food2forkkmm.domain.model.Recipe
 
@@ -16,7 +17,7 @@ fun RecipeDetailScreen(
 ) {
     AppTheme(displayProgressBar = false) {
         recipe?.let {
-            RecipeImage(url = it.featuredImage, contentDescription = it.title)
+            RecipeCard(recipe = recipe, onClick = { })
         } ?: run {
             Text(text = "ERROR Recipe ID is null")
         }
