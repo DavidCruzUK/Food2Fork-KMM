@@ -23,6 +23,10 @@ class SearchRecipes(
 
             delay(500)
 
+            if (query == "error"){
+                throw Exception("new errors")
+            }
+
             recipeCache.insert(recipes)
 
             val cacheResult = if (query.isBlank()) {

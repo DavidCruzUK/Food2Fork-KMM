@@ -24,7 +24,10 @@ fun RecipeDetailScreen(
     state: RecipeDetailState,
     onTriggerEvent: (RecipeDetailEvent) -> Unit,
 ) {
-    AppTheme(displayProgressBar = state.isLoading) {
+    AppTheme(
+        displayProgressBar = false,
+        dialogQueue = state.queue,
+    ) {
         state.recipe?.let {
             RecipeView(recipe = it)
         } ?: run {
