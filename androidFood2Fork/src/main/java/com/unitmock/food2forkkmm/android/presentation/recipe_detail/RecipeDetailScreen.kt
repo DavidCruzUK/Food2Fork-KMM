@@ -15,6 +15,7 @@ import com.unitmock.food2forkkmm.android.presentation.theme.AppTheme
 import com.unitmock.food2forkkmm.domain.model.Recipe
 import com.unitmock.food2forkkmm.presentation.recipe_detail.RecipeDetailEvent
 import com.unitmock.food2forkkmm.presentation.recipe_detail.RecipeDetailState
+import com.unitmock.food2forkkmm.presentation.recipe_list.RecipeListEvent
 
 @ExperimentalStdlibApi
 @ExperimentalComposeUiApi
@@ -27,6 +28,9 @@ fun RecipeDetailScreen(
     AppTheme(
         displayProgressBar = false,
         dialogQueue = state.queue,
+        onRemoveHeadFromQueue = {
+            onTriggerEvent(RecipeDetailEvent.OnRemoveHeadMessageFromQueue)
+        }
     ) {
         state.recipe?.let {
             RecipeView(recipe = it)

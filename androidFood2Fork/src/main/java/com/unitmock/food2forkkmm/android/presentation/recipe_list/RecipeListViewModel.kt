@@ -5,7 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.unitmock.food2forkkmm.domain.model.GenericMessageInfo
 import com.unitmock.food2forkkmm.domain.model.Recipe
+import com.unitmock.food2forkkmm.domain.model.UIComponentType
+import com.unitmock.food2forkkmm.domain.util.GenericMessageInfoQueueUtil
+import com.unitmock.food2forkkmm.domain.util.Queue
 import com.unitmock.food2forkkmm.interactors.recipe_list.SearchRecipes
 import com.unitmock.food2forkkmm.presentation.recipe_list.FoodCategory
 import com.unitmock.food2forkkmm.presentation.recipe_list.RecipeListEvent
@@ -13,7 +17,9 @@ import com.unitmock.food2forkkmm.presentation.recipe_list.RecipeListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class RecipeListViewModel
@@ -40,7 +46,26 @@ constructor(
             is RecipeListEvent.OnSelectCategory -> {
                 onSelectCategory(event.category)
             }
-            else -> handleError("Invalid Event")
+            is RecipeListEvent.OnRemoveHeadMessageFromQueue -> removeHeadMessageFromQueue()
+            else -> appendToMessageQueue(
+                    GenericMessageInfo.Builder()
+                        .id(UUID.randomUUID().toString())
+                        .title("Error")
+                        .uiComponentType(UIComponentType.Diaslog)
+                        .description("Invalid State")
+                        .build()
+                )
+        }
+    }
+
+    private fun removeHeadMessageFromQueue() {
+        try {
+            val queue = state.value.queue
+            queue.remove()
+            state.value = state.value.copy(queue = Queue(mutableListOf())) // Force Recompose
+            state.value = state.value.copy(queue = queue)
+        } catch (e: Exception) {
+
         }
     }
 
@@ -54,10 +79,15 @@ constructor(
         loadRecipes()
     }
 
-    private fun handleError(errorMessage: String) {
-        val queue = state.value.queue
-        queue.add(errorMessage)
-        state.value = state.value.copy(queue = queue)
+    private fun appendToMessageQueue(messageInfo: GenericMessageInfo) {
+        if (!GenericMessageInfoQueueUtil().doesMessageAlreadyExistInQueue(
+                queue = state.value.queue,
+                messageInfo = messageInfo
+        )) {
+            val queue = state.value.queue
+            queue.add(messageInfo)
+            state.value = state.value.copy(queue = queue)
+        }
     }
 
     private fun nextPage() {
@@ -74,7 +104,7 @@ constructor(
             dataState.data?.let { recipes ->
                 state.value = state.value.copy(recipes = recipes)
             }
-            dataState.message?.let { handleError(it) }
+            dataState.message?.let { appendToMessageQueue(it) }
         }.launchIn(viewModelScope)
     }
 
