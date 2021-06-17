@@ -25,10 +25,6 @@ class SearchRecipes(
 
             delay(500)
 
-            if (query == "error"){
-                throw Exception("new errors")
-            }
-
             recipeCache.insert(recipes)
 
             val cacheResult = if (query.isBlank()) {
@@ -42,7 +38,7 @@ class SearchRecipes(
             emit(DataState.error<List<Recipe>>(message = GenericMessageInfo.Builder()
                 .id("SearchRecipe.Error")
                 .title("Error")
-                .uiComponentType(UIComponentType.Diaslog)
+                .uiComponentType(UIComponentType.Dialog)
                 .description(e.message ?: "Unknown Error")
                 .build()
             ))

@@ -5,9 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.unitmock.food2forkkmm.domain.model.GenericMessageInfo
-import com.unitmock.food2forkkmm.domain.model.Recipe
-import com.unitmock.food2forkkmm.domain.model.UIComponentType
+import com.unitmock.food2forkkmm.domain.model.*
 import com.unitmock.food2forkkmm.domain.util.GenericMessageInfoQueueUtil
 import com.unitmock.food2forkkmm.domain.util.Queue
 import com.unitmock.food2forkkmm.interactors.recipe_list.SearchRecipes
@@ -51,7 +49,7 @@ constructor(
                     GenericMessageInfo.Builder()
                         .id(UUID.randomUUID().toString())
                         .title("Error")
-                        .uiComponentType(UIComponentType.Diaslog)
+                        .uiComponentType(UIComponentType.Dialog)
                         .description("Invalid State")
                         .build()
                 )

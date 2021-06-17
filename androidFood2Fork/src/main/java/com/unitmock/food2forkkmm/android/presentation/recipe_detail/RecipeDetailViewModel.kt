@@ -45,7 +45,7 @@ constructor(
                 GenericMessageInfo.Builder()
                     .id(UUID.randomUUID().toString())
                     .title("Error")
-                    .uiComponentType(UIComponentType.Diaslog)
+                    .uiComponentType(UIComponentType.Dialog)
                     .description("Invalid State")
                     .build()
             )
